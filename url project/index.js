@@ -1,15 +1,15 @@
 require("dotenv").config();
+
 const express=require ("express");
 const mongoose=require ("mongoose");
-const authroutes=require("./routes/url");
+const authroutes=require("./routes/index");
 const app=express();
-
+const {connectDB}=require("./connect/connect");
 app.use(express.json());
+connectDB()
 
-mongoose.connect(process.env.MONGO_URI,{})
-    .then(()=>console.log("mongo conected"))
-    .catch((error)=>console.log("not connected",err));
+app.use("/api/auth",authroutes.user);
+app.use("/api",authroutes.blog);
 
-app.use("/api/auth",authroutes);
 const PORT=process.env.PORT ||5000;
 app.listen(PORT,()=>console.log("started"));
